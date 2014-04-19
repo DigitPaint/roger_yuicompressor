@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "html_mockup-yuicompressor"
+  s.name = "html_mockup_yuicompressor"
   s.version = "1.0.0"
   
   s.authors = ["Flurin Egger"]
