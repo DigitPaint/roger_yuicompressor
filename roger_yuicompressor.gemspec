@@ -1,12 +1,12 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "html_mockup_yuicompressor"
+  s.name = "roger_yuicompressor"
   s.version = "1.0.0"
   
   s.authors = ["Flurin Egger"]
   s.email = ["info@digitpaint.nl", "flurin@digitpaint.nl"]  
-  s.homepage = "http://github.com/digitpaint/html_mockup-yuicompressor"
+  s.homepage = "http://github.com/digitpaint/roger_yuicompressor"
   s.summary = "Processor for using yuicompressor to minify CSS/JS"
   s.licenses = ["MIT"]
 
@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
   
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
-  s.add_dependency("html_mockup", ["~> 0.8.0"])
+  s.add_dependency("roger", ["~> 0.11.0"])
   s.add_dependency("yui-compressor", [">= 0"])
 end

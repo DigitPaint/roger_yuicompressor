@@ -1,5 +1,5 @@
-module HtmlMockupYuicompressor
-  class Yuicompressor < HtmlMockup::Release::Processors::Base
+module RogerYuicompressor
+  class Yuicompressor < Roger::Release::Processors::Base
     
     # Compresses all JS and CSS files, it will keep all lines before
     # 
@@ -53,3 +53,5 @@ module HtmlMockupYuicompressor
     end
   end
 end
+
+Roger::Release::Processors.register(:yuicompressor, RogerYuicompressor::Yuicompressor)
