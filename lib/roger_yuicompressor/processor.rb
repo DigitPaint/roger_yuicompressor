@@ -4,7 +4,6 @@ require 'yui/compressor'
 module RogerYuicompressor
   class Yuicompressor < ::Roger::Release::Processors::Base
 
-    VALID_SUFFIX = [false, '.min']
     attr_reader :options
 
     def initialize(options={})
@@ -12,7 +11,7 @@ module RogerYuicompressor
         :match => ["**/*.{css,js}"],
         :skip =>  [/javascripts\/vendor\/.*\.js\Z/, /_doc\/.*/],
         :delimiter => Regexp.escape("/* -------------------------------------------------------------------------------- */"),
-        :suffix => false
+        :suffix => nil
       }.update(options)
 
       compressor_options = {:line_break => 80}
@@ -29,20 +28,18 @@ module RogerYuicompressor
     # @options options [Array] match Files to match, default to ["**/*.{css,js}"]
     # @options options [Regexp] :delimiter An array of header delimiters. Defaults to the one above. The delimiter will be removed from the output.
     # @options options [Array[Regexp]] :skip An array of file regular expressions to specifiy which files to skip. Defaults to [/javascripts\/vendor\/.\*.js\Z/, /_doc\/.*/]
-    # @options options [bool|string] :suffix A string that will be added to the filename of the minified file. Defaults to false.
+    # @options options [Nil|string] :suffix A string that will be added to the filename of the minified file, if set to nil will overwrite the existing file. Defaults to nil.
     #   (example: test.js => test.min.js where :suffix => '.min').
     def call(release, options={})
       @options.update(options)
             
       release.log self,  "Minifying #{options[:match].inspect}"
-      
+
+      raise(RuntimeError, "The given suffix #{@options[:suffix]} is invalid.") unless valid_suffix?(@options[:sufix])
+            
       # Add version numbers and minify the files
       release.get_files(options[:match], options[:skip]).each do |filename|
-        if valid_suffix?
-          minify_file(filename, release)
-        else
-          raise RuntimeError, "The given suffix #{@options[:suffix]} is invalid."
-        end
+        minify_file(filename, release)
       end
     end
 
@@ -54,8 +51,8 @@ module RogerYuicompressor
     end
 
     # Check if a valid suffix is given
-    def valid_suffix?
-      VALID_SUFFIX.include?(@options[:suffix])
+    def valid_suffix?(suffix = nil)
+      suffix === nil || suffix.kind_of?(String)
     end
 
     # Read and minfiy the given file
@@ -63,7 +60,11 @@ module RogerYuicompressor
       data = File.read(file);
       type = get_file_type(file)
 
-      output_file = ((@options[:suffix] != false) ? "#{file.chomp(File.extname(file))}#{@options[:suffix]}.#{type}" : file)
+      if @options[:suffix] != nil
+        output_file = file.sub(".#{type}", "") + @options[:suffix] + ".#{type}"
+      else
+        output_file = file
+      end
 
       File.open(output_file, "w") do |fh| 
         

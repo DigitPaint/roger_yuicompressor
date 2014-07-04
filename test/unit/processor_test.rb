@@ -26,8 +26,8 @@ class ProcessorTest < Test::Unit::TestCase
 
   # When the suffix '.min' is given it should be valid
   def test_valid_suffix
-    processor = RogerYuicompressor::Yuicompressor.new({:suffix => '.min'})
-    assert(processor.valid_suffix?, "Suffix '.min' should be valid.")
+    assert(@processor.valid_suffix?(".min"), "Suffix '.min' should be valid.")
+    assert(@processor.valid_suffix?("-test"), "Suffix '-test' should be valid.")    
   end
 
   # Test that extension of file get correct extracted
