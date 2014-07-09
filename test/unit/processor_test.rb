@@ -51,8 +51,26 @@ class ProcessorTest < Test::Unit::TestCase
     assert(File.exists?('file.css'))
   end
 
+  # Test that /*! comments are maintained in the output of YUI
+  def test_preserve_comments_in_css
+    preserved_comment = '/*! This comment remains */'
+    removed_comment = '/* This comment is removed */'
+
+    ["file.js", "file.css"].each do |tmp_file|
+      File.open(tmp_file, 'w') do |tmp_file|
+        tmp_file.write(preserved_comment)
+        tmp_file.write(removed_comment)
+      end
+
+      assert_match /remains/, File.read(@processor.minify_file(tmp_file, nil)), "/*! should be preserved by Yuicompressor"
+      assert_no_match /removed/, File.read(@processor.minify_file(tmp_file, nil)), "/* should be removed by Yuicompressor"
+    end
+
+  end
+
   def teardown
     File.delete('file.css') if File.exists?('file.css')
     File.delete('file.min.css') if File.exists?('file.min.css')
+    File.delete('file.js') if File.exists?('file.js')
   end
 end
