@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + "/../../lib/roger_yuicompressor/processor"
 require "test/unit"
-require "rspec/mocks"
+require "rspec/mocks/standalone"
 
 class ProcessorTest < Test::Unit::TestCase
   include RSpec::Mocks::ExampleMethods
