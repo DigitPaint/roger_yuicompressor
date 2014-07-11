@@ -33,12 +33,12 @@ module RogerYuicompressor
     def call(release, options={})
       @options.update(options)
             
-      release.log self,  "Minifying #{options[:match].inspect}"
+      release.log self,  "Minifying #{@options[:match].inspect}"
 
-      raise(RuntimeError, "The given suffix #{@options[:suffix]} is invalid.") unless valid_suffix?(@options[:sufix])
+      raise(RuntimeError, "The given suffix #{@options[:suffix]} is invalid.") unless valid_suffix?(@options[:suffix])
             
       # Add version numbers and minify the files
-      release.get_files(options[:match], options[:skip]).each do |filename|
+      release.get_files(@options[:match], @options[:skip]).each do |filename|
         minify_file(filename, release)
       end
     end
