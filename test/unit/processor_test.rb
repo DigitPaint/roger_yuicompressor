@@ -1,11 +1,13 @@
 require File.dirname(__FILE__) + "/../../lib/roger_yuicompressor/processor"
 require "test/unit"
+require "rspec/mocks"
 
 class ProcessorTest < Test::Unit::TestCase
+  include RSpec::Mocks::ExampleMethods
   
   def setup
     @processor = RogerYuicompressor::Yuicompressor.new
-    @tmp_file  = 'file.css'
+    @tmp_file  = 'file.css'    
 
     # TEMP file creation
     File.open(@tmp_file, 'w') do |tmp_file|
@@ -51,8 +53,27 @@ class ProcessorTest < Test::Unit::TestCase
     assert(File.exists?('file.css'))
   end
 
+  def test_call_method
+    options = {:suffix => '.testsuffix', :match => ["file.css"]}
+    processor = RogerYuicompressor::Yuicompressor.new(options)
+    
+    # Mock
+    release = double('Roger::Release')
+
+    # Expectations
+    expect(release).to receive(:log)
+    expect(release).to receive(:get_files).with(processor.options[:match], processor.options[:skip]).and_return(processor.options[:match])
+
+    # Call method
+    processor.call(release)
+
+    assert(File.exists?('file.testsuffix.css'), "File 'file.testsuffix.css' doesn't exist using Processor::Call method")
+    assert(File.exists?('file.css'), "File 'file.css' doesn't exist using Processor::Call method")
+  end
+
   def teardown
-    File.delete('file.css') if File.exists?('file.css')
-    File.delete('file.min.css') if File.exists?('file.min.css')
+    Dir['file.*.css', 'file.css'].each do |file|
+      File.delete(file)
+    end
   end
 end
