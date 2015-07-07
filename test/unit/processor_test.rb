@@ -62,6 +62,7 @@ class ProcessorTest < Test::Unit::TestCase
 
     # Expectations
     expect(release).to receive(:log)
+    expect(release).to receive(:debug)
     expect(release).to receive(:get_files).with(processor.options[:match], processor.options[:skip]).and_return(processor.options[:match])
 
     # Call method
